@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pesca 2 carte</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+    }
+    img {
+      width: 150px;
+      margin: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    img:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Scegli una carta</h2>
+<div id="cards"></div>
+
+<script>
+const cards = [
+  "carta1.png",
+  "carta2.png",
+  "carta3.png",
+  "carta4.png",
+  "carta5.png"
+];
+
+function getRandomCards(array, num) {
+  let shuffled = [...array].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+}
+
+let selected = getRandomCards(cards, 2);
+let container = document.getElementById("cards");
+
+selected.forEach(card => {
+  let img = document.createElement("img");
+  img.src = card;
+
+  img.onclick = () => {
+    alert("Hai scelto questa carta!");
+  };
+
+  container.appendChild(img);
+});
+</script>
+
+</body>
+</html>
