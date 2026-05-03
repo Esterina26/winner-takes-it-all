@@ -4,79 +4,103 @@
   <title>Pesca 1 carta</title>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rubik:wght@400;700;900&display=swap');
+
     body {
       margin: 0;
       min-height: 100vh;
       text-align: center;
-      font-family: Arial, sans-serif;
+      font-family: 'Rubik', sans-serif;
       color: white;
       overflow-x: hidden;
-      background: linear-gradient(120deg, #050816, #0b1f3a, #111827, #06111f);
-      background-size: 400% 400%;
-      animation: digitalMove 12s ease infinite;
+      background: radial-gradient(circle at 20% 20%, #7c3aed, transparent 30%),
+                  radial-gradient(circle at 80% 10%, #06b6d4, transparent 25%),
+                  radial-gradient(circle at 50% 90%, #ec4899, transparent 30%),
+                  #070016;
+      background-size: 200% 200%;
+      animation: bgMove 10s ease-in-out infinite alternate;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
-      background-size: 45px 45px;
-      animation: gridMove 8s linear infinite;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.22) 2px, transparent 3px);
+      background-size: 55px 55px;
+      animation: dotsMove 9s linear infinite;
+      opacity: 0.45;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.09), transparent 40%, rgba(255,255,255,0.08));
+      backdrop-filter: blur(1px);
       z-index: -1;
     }
 
-    @keyframes digitalMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes bgMove {
+      from { background-position: 0% 0%; }
+      to { background-position: 100% 100%; }
     }
 
-    @keyframes gridMove {
+    @keyframes dotsMove {
       from { transform: translateY(0); }
-      to { transform: translateY(45px); }
+      to { transform: translateY(55px); }
     }
 
     h2 {
       margin-top: 35px;
+      font-family: 'Orbitron', sans-serif;
       font-size: 34px;
-      text-shadow: 0 0 12px black;
+      letter-spacing: 1px;
+      text-shadow: 0 0 18px #06b6d4, 0 0 30px #ec4899;
+    }
+
+    #cards {
+      margin-top: 25px;
     }
 
     img {
-      width: 280px;
+      width: 300px;
       max-width: 42vw;
       margin: 15px;
       cursor: pointer;
-      transition: all 0.4s ease;
-      border-radius: 18px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.25);
+      transition: all 0.45s ease;
+      border-radius: 22px;
+      box-shadow: 0 0 28px rgba(6, 182, 212, 0.55),
+                  0 0 45px rgba(236, 72, 153, 0.35);
     }
 
     img:hover {
-      transform: scale(1.06);
+      transform: translateY(-8px) scale(1.07);
+      box-shadow: 0 0 35px rgba(6, 182, 212, 0.8),
+                  0 0 60px rgba(236, 72, 153, 0.55);
     }
 
     .zoomed {
-      width: 430px;
-      max-width: 85vw;
-      transform: scale(1.05);
+      width: 460px;
+      max-width: 88vw;
+      transform: scale(1.04);
     }
 
     #result {
-      margin-top: 25px;
-      font-size: 26px;
-      font-weight: bold;
-      text-shadow: 0 0 12px black;
+      margin-top: 28px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px #06b6d4, 0 0 25px #ec4899;
     }
   </style>
 </head>
 
 <body>
 
-  <h2>Scegli una carta</h2>
+  <h2 id="title">Scegli una carta</h2>
 
   <div id="cards"></div>
   <div id="result"></div>
@@ -129,12 +153,14 @@
     let selected = getRandomCards(cards, 2);
     let container = document.getElementById("cards");
     let result = document.getElementById("result");
+    let title = document.getElementById("title");
 
     selected.forEach(card => {
       let img = document.createElement("img");
       img.src = card;
 
       img.onclick = () => {
+        title.style.display = "none";
         container.innerHTML = "";
         img.classList.add("zoomed");
         container.appendChild(img);
