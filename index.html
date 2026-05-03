@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pesca 1 carta</title>
+  <title>Winner Takes It All</title>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rubik:wght@400;700;900&display=swap');
@@ -13,14 +13,12 @@
       font-family: 'Rubik', sans-serif;
       color: white;
       overflow-x: hidden;
-
       background: radial-gradient(circle at 20% 20%, #7c3aed, transparent 30%),
                   radial-gradient(circle at 80% 10%, #06b6d4, transparent 25%),
                   radial-gradient(circle at 50% 90%, #ec4899, transparent 30%),
                   #070016;
       background-size: 200% 200%;
       animation: bgMove 10s ease-in-out infinite alternate;
-
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -31,8 +29,7 @@
       content: "";
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.22) 2px, transparent 3px);
+      background: radial-gradient(circle, rgba(255,255,255,0.22) 2px, transparent 3px);
       background-size: 55px 55px;
       animation: dotsMove 9s linear infinite;
       opacity: 0.45;
@@ -58,13 +55,54 @@
       to { transform: translateY(55px); }
     }
 
-    h2 {
-      margin-top: 0;
-      margin-bottom: 25px;
+    .screen {
+      width: 92%;
+      max-width: 900px;
+    }
+
+    h1, h2 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 34px;
       letter-spacing: 1px;
       text-shadow: 0 0 18px #06b6d4, 0 0 30px #ec4899;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 80%;
+      max-width: 360px;
+      padding: 16px;
+      border-radius: 18px;
+      border: none;
+      font-size: 18px;
+      text-align: center;
+      outline: none;
+      margin-bottom: 18px;
+    }
+
+    button {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 18px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #06b6d4, #ec4899);
+      box-shadow: 0 0 22px rgba(236, 72, 153, 0.55);
+      margin: 8px;
+    }
+
+    button:hover {
+      transform: scale(1.05);
     }
 
     #cards {
@@ -106,14 +144,29 @@
       text-shadow: 0 0 15px #06b6d4, 0 0 25px #ec4899;
     }
 
+    #info {
+      margin-top: 18px;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+
+    #history {
+      margin-top: 20px;
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    .hidden {
+      display: none;
+    }
+
     @media (max-width: 600px) {
-      h2 {
-        font-size: 26px;
-        margin-bottom: 22px;
+      h1 {
+        font-size: 28px;
       }
 
-      #cards {
-        gap: 14px;
+      h2 {
+        font-size: 24px;
       }
 
       img {
@@ -128,7 +181,6 @@
 
       #result {
         font-size: 20px;
-        margin-top: 24px;
       }
     }
   </style>
@@ -136,75 +188,135 @@
 
 <body>
 
-  <h2 id="title">Scegli una carta</h2>
+  <div id="loginScreen" class="screen">
+    <h1>Winner Takes It All</h1>
+    <h2>Inserisci il tuo nome giocatore</h2>
+    <input id="playerNameInput" type="text" placeholder="Il tuo nome">
+    <br>
+    <button onclick="startGame()">Entra nel gioco</button>
+  </div>
 
-  <div id="cards"></div>
-  <div id="result"></div>
+  <div id="gameScreen" class="screen hidden">
+    <h2 id="title">Scegli una carta</h2>
+
+    <div id="cards"></div>
+    <div id="result"></div>
+    <div id="info"></div>
+    <div id="history"></div>
+
+    <br>
+    <button onclick="newTurn()">Nuovo turno</button>
+    <button onclick="resetGame()">Reset partita</button>
+  </div>
 
   <script>
     const cards = [
-      "carta1.png",
-      "carta2.png",
-      "carta3.png",
-      "carta4.png",
-      "carta5.png",
-      "carta6.png",
-      "carta7.png",
-      "carta8.png",
-      "carta9.png",
-      "carta10.png",
-      "carta11.png",
-      "carta12.png",
-      "carta13.png",
-      "carta14.png",
-      "carta15.png",
-      "carta16.png",
-      "carta17.png",
-      "carta18.png",
-      "carta19.png",
-      "carta20.png",
-      "carta21.png",
-      "carta22.png",
-      "carta23.png",
-      "carta24.png",
-      "carta25.png",
-      "carta26.png",
-      "carta27.png",
-      "carta28.png",
-      "carta29.png",
-      "carta30.png",
-      "carta31.png",
-      "carta32.png",
-      "carta33.png",
-      "carta34.png",
-      "carta35.png",
-      "carta36.png"
+      "carta1.png", "carta2.png", "carta3.png", "carta4.png",
+      "carta5.png", "carta6.png", "carta7.png", "carta8.png",
+      "carta9.png", "carta10.png", "carta11.png", "carta12.png",
+      "carta13.png", "carta14.png", "carta15.png", "carta16.png",
+      "carta17.png", "carta18.png", "carta19.png", "carta20.png",
+      "carta21.png", "carta22.png", "carta23.png", "carta24.png",
+      "carta25.png", "carta26.png", "carta27.png", "carta28.png",
+      "carta29.png", "carta30.png", "carta31.png", "carta32.png",
+      "carta33.png", "carta34.png", "carta35.png", "carta36.png"
     ];
+
+    let playerName = localStorage.getItem("playerName") || "";
+    let chosenCards = JSON.parse(localStorage.getItem("chosenCards")) || [];
+
+    const loginScreen = document.getElementById("loginScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const playerNameInput = document.getElementById("playerNameInput");
+    const container = document.getElementById("cards");
+    const result = document.getElementById("result");
+    const info = document.getElementById("info");
+    const history = document.getElementById("history");
+    const title = document.getElementById("title");
+
+    if (playerName) {
+      showGame();
+    }
+
+    function startGame() {
+      const name = playerNameInput.value.trim();
+
+      if (name === "") {
+        alert("Inserisci un nome giocatore!");
+        return;
+      }
+
+      playerName = name;
+      localStorage.setItem("playerName", playerName);
+      showGame();
+    }
+
+    function showGame() {
+      loginScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+      newTurn();
+    }
+
+    function getAvailableCards() {
+      return cards.filter(card => !chosenCards.includes(card));
+    }
 
     function getRandomCards(array, num) {
       let shuffled = [...array].sort(() => 0.5 - Math.random());
       return shuffled.slice(0, num);
     }
 
-    let selected = getRandomCards(cards, 2);
-    let container = document.getElementById("cards");
-    let result = document.getElementById("result");
-    let title = document.getElementById("title");
+    function newTurn() {
+      container.innerHTML = "";
+      result.innerText = "";
+      title.style.display = "block";
 
-    selected.forEach(card => {
-      let img = document.createElement("img");
-      img.src = card;
+      let availableCards = getAvailableCards();
 
-      img.onclick = () => {
-        title.style.display = "none";
-        container.innerHTML = "";
-        img.classList.add("zoomed");
+      info.innerText = playerName + ", hai già scelto " + chosenCards.length + " carte su " + cards.length + ".";
+
+      if (chosenCards.length > 0) {
+        history.innerText = "Carte già scelte: " + chosenCards.map(card => card.replace(".png", "")).join(", ");
+      } else {
+        history.innerText = "";
+      }
+
+      if (availableCards.length === 0) {
+        title.innerText = "Hai pescato tutte le carte!";
+        return;
+      }
+
+      let selected = getRandomCards(availableCards, Math.min(2, availableCards.length));
+
+      selected.forEach(card => {
+        let img = document.createElement("img");
+        img.src = card;
+
+        img.onclick = () => {
+          if (!chosenCards.includes(card)) {
+            chosenCards.push(card);
+            localStorage.setItem("chosenCards", JSON.stringify(chosenCards));
+          }
+
+          title.style.display = "none";
+          container.innerHTML = "";
+          img.classList.add("zoomed");
+          container.appendChild(img);
+
+          result.innerText = "Hai scelto questa carta!";
+          info.innerText = playerName + ", hai scelto " + chosenCards.length + " carte su " + cards.length + ".";
+          history.innerText = "Carte già scelte: " + chosenCards.map(card => card.replace(".png", "")).join(", ");
+        };
+
         container.appendChild(img);
-        result.innerText = "Hai scelto questa carta!";
-      };
+      });
+    }
 
-      container.appendChild(img);
-    });
+    function resetGame() {
+      localStorage.removeItem("playerName");
+      localStorage.removeItem("chosenCards");
+      location.reload();
+    }
   </script>
 
 </body>
