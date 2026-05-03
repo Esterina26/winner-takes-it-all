@@ -57,10 +57,11 @@
 
     .screen {
       width: 92%;
-      max-width: 900px;
+      max-width: 950px;
+      padding: 25px 0;
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       font-family: 'Orbitron', sans-serif;
       letter-spacing: 1px;
       text-shadow: 0 0 18px #06b6d4, 0 0 30px #ec4899;
@@ -74,6 +75,12 @@
     h2 {
       font-size: 30px;
       margin-bottom: 25px;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-top: 28px;
+      margin-bottom: 15px;
     }
 
     input {
@@ -113,7 +120,7 @@
       flex-wrap: wrap;
     }
 
-    img {
+    img.card {
       width: 300px;
       max-width: 42vw;
       cursor: pointer;
@@ -123,13 +130,13 @@
                   0 0 45px rgba(236, 72, 153, 0.35);
     }
 
-    img:hover {
+    img.card:hover {
       transform: translateY(-8px) scale(1.07);
       box-shadow: 0 0 35px rgba(6, 182, 212, 0.8),
                   0 0 60px rgba(236, 72, 153, 0.55);
     }
 
-    .zoomed {
+    img.zoomed {
       width: 460px;
       max-width: 88vw;
       transform: scale(1.04);
@@ -150,10 +157,19 @@
       opacity: 0.95;
     }
 
-    #history {
-      margin-top: 20px;
-      font-size: 15px;
-      opacity: 0.85;
+    #chosenGallery {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    #chosenGallery img {
+      width: 82px;
+      border-radius: 10px;
+      box-shadow: 0 0 14px rgba(255,255,255,0.35);
     }
 
     .hidden {
@@ -161,6 +177,14 @@
     }
 
     @media (max-width: 600px) {
+      body {
+        justify-content: flex-start;
+      }
+
+      .screen {
+        padding-top: 45px;
+      }
+
       h1 {
         font-size: 28px;
       }
@@ -169,18 +193,22 @@
         font-size: 24px;
       }
 
-      img {
+      img.card {
         width: 43vw;
         max-width: 43vw;
       }
 
-      .zoomed {
+      img.zoomed {
         width: 82vw;
         max-width: 82vw;
       }
 
       #result {
         font-size: 20px;
+      }
+
+      #chosenGallery img {
+        width: 64px;
       }
     }
   </style>
@@ -202,7 +230,9 @@
     <div id="cards"></div>
     <div id="result"></div>
     <div id="info"></div>
-    <div id="history"></div>
+
+    <h3 id="galleryTitle">Le tue carte scelte</h3>
+    <div id="chosenGallery"></div>
 
     <br>
     <button onclick="newTurn()">Nuovo turno</button>
@@ -231,8 +261,9 @@
     const container = document.getElementById("cards");
     const result = document.getElementById("result");
     const info = document.getElementById("info");
-    const history = document.getElementById("history");
     const title = document.getElementById("title");
+    const chosenGallery = document.getElementById("chosenGallery");
+    const galleryTitle = document.getElementById("galleryTitle");
 
     if (playerName) {
       showGame();
@@ -266,20 +297,34 @@
       return shuffled.slice(0, num);
     }
 
+    function renderChosenGallery() {
+      chosenGallery.innerHTML = "";
+
+      if (chosenCards.length === 0) {
+        galleryTitle.style.display = "none";
+        return;
+      }
+
+      galleryTitle.style.display = "block";
+
+      chosenCards.forEach(card => {
+        let miniImg = document.createElement("img");
+        miniImg.src = card;
+        chosenGallery.appendChild(miniImg);
+      });
+    }
+
     function newTurn() {
       container.innerHTML = "";
       result.innerText = "";
       title.style.display = "block";
+      title.innerText = "Scegli una carta";
 
       let availableCards = getAvailableCards();
 
       info.innerText = playerName + ", hai già scelto " + chosenCards.length + " carte su " + cards.length + ".";
 
-      if (chosenCards.length > 0) {
-        history.innerText = "Carte già scelte: " + chosenCards.map(card => card.replace(".png", "")).join(", ");
-      } else {
-        history.innerText = "";
-      }
+      renderChosenGallery();
 
       if (availableCards.length === 0) {
         title.innerText = "Hai pescato tutte le carte!";
@@ -291,6 +336,7 @@
       selected.forEach(card => {
         let img = document.createElement("img");
         img.src = card;
+        img.classList.add("card");
 
         img.onclick = () => {
           if (!chosenCards.includes(card)) {
@@ -305,7 +351,8 @@
 
           result.innerText = "Hai scelto questa carta!";
           info.innerText = playerName + ", hai scelto " + chosenCards.length + " carte su " + cards.length + ".";
-          history.innerText = "Carte già scelte: " + chosenCards.map(card => card.replace(".png", "")).join(", ");
+
+          renderChosenGallery();
         };
 
         container.appendChild(img);
