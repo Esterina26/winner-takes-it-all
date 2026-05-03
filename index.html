@@ -2,99 +2,148 @@
 <html>
 <head>
   <title>Pesca 1 carta</title>
+
   <style>
     body {
+      margin: 0;
+      min-height: 100vh;
       text-align: center;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow-x: hidden;
+      background: linear-gradient(120deg, #050816, #0b1f3a, #111827, #06111f);
+      background-size: 400% 400%;
+      animation: digitalMove 12s ease infinite;
     }
-   img {
-  width: 280px;
-  max-width: 42vw;
-  margin: 15px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-}
 
-img:hover {
-  transform: scale(1.06);
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 45px 45px;
+      animation: gridMove 8s linear infinite;
+      z-index: -1;
+    }
 
-.zoomed {
-  width: 420px;
-  max-width: 85vw;
-  transform: scale(1.05);
-}
+    @keyframes digitalMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes gridMove {
+      from { transform: translateY(0); }
+      to { transform: translateY(45px); }
+    }
+
+    h2 {
+      margin-top: 35px;
+      font-size: 34px;
+      text-shadow: 0 0 12px black;
+    }
+
+    img {
+      width: 280px;
+      max-width: 42vw;
+      margin: 15px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      border-radius: 18px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.25);
+    }
+
+    img:hover {
+      transform: scale(1.06);
+    }
+
+    .zoomed {
+      width: 430px;
+      max-width: 85vw;
+      transform: scale(1.05);
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 26px;
+      font-weight: bold;
+      text-shadow: 0 0 12px black;
+    }
   </style>
 </head>
 
 <body>
 
-<h2>Scegli una carta</h2>
-<div id="cards"></div>
+  <h2>Scegli una carta</h2>
 
-</body>
-</html>
-<script>
-const cards = [
-  "carta1.png",
-  "carta2.png",
-  "carta3.png",
-  "carta4.png",
-  "carta5.png",
-  "carta6.png",
-  "carta7.png",
-  "carta8.png",
-  "carta9.png",
-  "carta10.png",
-  "carta11.png",
-  "carta12.png",
-  "carta13.png",
-  "carta14.png",
-  "carta15.png",
-  "carta16.png",
-  "carta17.png",
-  "carta18.png",
-  "carta19.png",
-  "carta20.png",
-  "carta21.png",
-  "carta22.png",
-  "carta23.png",
-  "carta24.png",
-  "carta25.png",
-  "carta26.png",
-  "carta27.png",
-  "carta28.png",
-  "carta29.png",
-  "carta30.png",
-  "carta31.png",
-  "carta32.png",
-  "carta33.png",
-  "carta34.png",
-  "carta35.png",
-  "carta36.png"
-];
+  <div id="cards"></div>
+  <div id="result"></div>
 
-function getRandomCards(array, num) {
-  let shuffled = [...array].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, num);
-}
+  <script>
+    const cards = [
+      "carta1.png",
+      "carta2.png",
+      "carta3.png",
+      "carta4.png",
+      "carta5.png",
+      "carta6.png",
+      "carta7.png",
+      "carta8.png",
+      "carta9.png",
+      "carta10.png",
+      "carta11.png",
+      "carta12.png",
+      "carta13.png",
+      "carta14.png",
+      "carta15.png",
+      "carta16.png",
+      "carta17.png",
+      "carta18.png",
+      "carta19.png",
+      "carta20.png",
+      "carta21.png",
+      "carta22.png",
+      "carta23.png",
+      "carta24.png",
+      "carta25.png",
+      "carta26.png",
+      "carta27.png",
+      "carta28.png",
+      "carta29.png",
+      "carta30.png",
+      "carta31.png",
+      "carta32.png",
+      "carta33.png",
+      "carta34.png",
+      "carta35.png",
+      "carta36.png"
+    ];
 
-let selected = getRandomCards(cards, 2);
-let container = document.getElementById("cards");
+    function getRandomCards(array, num) {
+      let shuffled = [...array].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    }
 
-selected.forEach(card => {
-  let img = document.createElement("img");
-  img.src = card;
+    let selected = getRandomCards(cards, 2);
+    let container = document.getElementById("cards");
+    let result = document.getElementById("result");
 
-  img.onclick = () => {
-    container.innerHTML = "";
-    img.classList.add("zoomed");
-    container.appendChild(img);
-  };
+    selected.forEach(card => {
+      let img = document.createElement("img");
+      img.src = card;
 
-  container.appendChild(img);
-});
-</script>
+      img.onclick = () => {
+        container.innerHTML = "";
+        img.classList.add("zoomed");
+        container.appendChild(img);
+        result.innerText = "Hai scelto questa carta!";
+      };
+
+      container.appendChild(img);
+    });
+  </script>
 
 </body>
 </html>
